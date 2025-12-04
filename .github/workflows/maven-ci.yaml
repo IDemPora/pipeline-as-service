@@ -1,0 +1,32 @@
+name: "Reusable Maven Validate"
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        type: string
+        default: "."
+      mvn_args:
+        type: string
+        default: ""
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Maven Validate
+        run: mvn -f "${{ inputs.working_directory }}" validate ${{ inputs.mvn_args }}
+   
+      - name: Maven Compile
+        run: mvn -f "${{ inputs.working_directory }}" compile
+ 
+      - name: Maven Test
+        run: mvn -f "${{ inputs.working_directory }}" test
+  
+      - name: Maven Code Coverage
+        run: mvn -f "${{ inputs.working_directory }}" prepare-package
+      
