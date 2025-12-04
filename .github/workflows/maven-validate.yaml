@@ -1,0 +1,26 @@
+name: "Reusable Maven Validate"
+
+on:
+  workflow_call:
+    inputs:
+      working_directory:
+        type: string
+        default: "."
+      mvn_args:
+        type: string
+        default: ""
+    secrets: {}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Maven Validate
+        uses: ./actions/maven-validate
+        with:
+          working_directory: ${{ inputs.working_directory }}
+          mvn_args: ${{ inputs.mvn_args }}
