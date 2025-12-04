@@ -11,7 +11,7 @@ on:
         default: ""
 
 jobs:
-  validate:
+  maven:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,4 +29,27 @@ jobs:
   
       - name: Maven Code Coverage
         run: mvn -f "${{ inputs.working_directory }}" prepare-package
+
+      - name: Maven Package
+        run: mvn -f "${{ inputs.working_directory }}" package
+  kaniko-build:
+    runs-on: ubuntu-latest
+    needs: maven
+    container:
+      image: gcr.io/kaniko-project/executor:latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Kaniko Build Docker Image (tar only)
+        run: |
+          /kaniko/executor \
+            --context "${{ inputs.working_directory }}" \
+            --dockerfile "${{ inputs.working_directory }}/Dockerfile" \
+            --build-arg BASE_IMAGE=${{ inputs.base_image }} \
+            --no-push \
+            --tarPath "${{ inputs.docker_tar_path }}"
+          
+      - name: List files
+        run: ls -ltr
       
