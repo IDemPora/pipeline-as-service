@@ -46,7 +46,6 @@ jobs:
           /kaniko/executor \
             --context "${{ inputs.working_directory }}" \
             --dockerfile "${{ inputs.working_directory }}/Dockerfile" \
-            --build-arg BASE_IMAGE=${{ inputs.base_image }} \
             --no-push \
             --tarPath "${{ inputs.docker_tar_path }}"
           
