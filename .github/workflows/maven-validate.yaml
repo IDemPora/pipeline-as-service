@@ -9,7 +9,6 @@ on:
       mvn_args:
         type: string
         default: ""
-    secrets: {}
 
 jobs:
   validate:
@@ -20,7 +19,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Maven Validate
-        uses: ./actions/maven-validate
-        with:
-          working_directory: ${{ inputs.working_directory }}
-          mvn_args: ${{ inputs.mvn_args }}
+        run: mvn -f "${{ inputs.working_directory }}" validate ${{ inputs.mvn_args }}
